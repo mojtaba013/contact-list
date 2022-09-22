@@ -1,17 +1,22 @@
 import { useState } from "react";
-import "./addContact.css"
+import { useNavigate } from "react-router-dom";
+import addOneContact from "../../services/addContactService";
+import "./addContact.css";
 
-const AddContact = ({addContactHandler}) => {
+const AddContact = () => {
   const [contact, setContact] = useState({ name: "", email: "" });
+  const navigate = useNavigate();
   const changeHandler = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
   };
 
- const submitForm=(e)=>{
-  e.preventDefault();
-  addContactHandler(contact);
-  setContact({name:"",email:""});
- }
+  const submitForm = async (e) => {
+    try {
+      e.preventDefault();
+      await addOneContact(contact);
+      navigate("/");
+    } catch (error) {}
+  };
 
   return (
     <form onSubmit={submitForm}>
@@ -33,7 +38,7 @@ const AddContact = ({addContactHandler}) => {
           onChange={changeHandler}
         />
       </div>
-      <button type="submit">AddContact</button>
+      <button type="submit">Add</button>
     </form>
   );
 };

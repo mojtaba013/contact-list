@@ -3,20 +3,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import getOneContact from "../../services/getOneContact";
 import updateContact from "../../services/updateContact";
 
-const EditContact = ({ editContactHandler }) => {
+const EditContact = () => {
   const params = useParams();
-  const navigate=useNavigate();
-
+  const navigate = useNavigate();
   const [contact, setContact] = useState({ name: "", email: "" });
 
   const changeHandler = (e) => {
     setContact({ ...contact, [e.target.name]: e.target.value });
   };
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
-    editContactHandler(contact,params.id);
-    navigate("/")
+    await updateContact(params.id, contact);
+    navigate("/");
   };
 
   useEffect(() => {
@@ -25,7 +24,6 @@ const EditContact = ({ editContactHandler }) => {
         const { data } = await getOneContact(params.id);
 
         setContact({ name: data.name, email: data.email });
-        
       } catch (error) {}
     };
     localFetch();
